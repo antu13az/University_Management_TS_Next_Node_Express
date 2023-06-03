@@ -1,6 +1,7 @@
 import app from './app'
 import config from './config'
+import { successLogger } from './logger/logger'
 
 app.listen(config.port, () => {
-  console.log(`🚀 Server is running on port ${config.port}`)
+  successLogger.info(`🚀 Server is running on port ${config.port}`)
 })

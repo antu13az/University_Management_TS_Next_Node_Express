@@ -1,2 +1,0 @@
-Sat Jun 03 2023 16: 41: 58 [right meow!] error: Database url not specified
-Sat Jun 03 2023 16: 41: 58 [right meow!] error: The `uri` parameter to `openUri()` must be a string, got "undefined". Make sure the first parameter to `mongoose.connect()` or `mongoose.createConnection()` is a string.

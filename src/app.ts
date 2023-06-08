@@ -17,6 +17,8 @@ dbConnect()
 
 app.use('/api/v1/users/', userRoutes)
 
+// extEnds error handling
+
 // Root Api
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello World!')

@@ -1,4 +1,5 @@
 import config from '../../../config'
+import ApiError from '../../../errorsHandler/ApiErrors'
 import { IUser } from './user.interface'
 import { User } from './user.model'
 import { generatedUserId } from './user.utils'
@@ -15,11 +16,11 @@ const createUser = async (user: IUser): Promise<IUser | null> => {
   if (!user.password) {
     user.password = config.default_user_Pass as string
   }
-
+  // Here User is come form the user model
   const createUser = await User.create(user)
 
   if (!createUser) {
-    throw new Error('Could not create user')
+    throw new ApiError(400, 'Could not create user')
   }
   return createUser
 }

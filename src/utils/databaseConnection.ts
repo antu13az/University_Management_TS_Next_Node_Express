@@ -8,7 +8,7 @@ const dbConnect = async () => {
       errorLogger.error('Database url not specified')
     }
     await mongoose.connect(config.database_url as string)
-    successLogger.info('Database connected')
+    successLogger.info('🌐 Database Connected Successfully')
   } catch (err) {
     errorLogger.error(err)
   }

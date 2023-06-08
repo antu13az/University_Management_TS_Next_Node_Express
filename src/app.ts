@@ -1,7 +1,8 @@
 import cors from 'cors'
 import express, { Application, Request, Response } from 'express'
-import userRoutes from './app/modules/users/user.route'
+
 import dbConnect from './utils/databaseConnection'
+import { UserRoutes } from './app/modules/users/user.route'
 const app: Application = express()
 
 // Middleware
@@ -15,7 +16,7 @@ dbConnect()
 
 // Application all controllers routs
 
-app.use('/api/v1/users/', userRoutes)
+app.use('/api/v1/users/', UserRoutes)
 
 // extEnds error handling
 

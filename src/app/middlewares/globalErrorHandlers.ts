@@ -1,10 +1,10 @@
-import { NextFunction, Request, Response } from 'express'
+import { ErrorRequestHandler, NextFunction, Request, Response } from 'express'
 import config from '../../config'
+import ApiError from '../../errorsHandler/ApiErrors'
 import handleValidationError from '../../errorsHandler/handleValidetionError'
 import { IGenericErrorMessage } from '../../interfaces/errorsType'
-import ApiError from '../../errorsHandler/ApiErrors'
 
-const globalErrorHandlers = (
+const globalErrorHandlers: ErrorRequestHandler = (
   err,
   req: Request,
   res: Response,
@@ -12,18 +12,27 @@ const globalErrorHandlers = (
 ) => {
   let statusCode = 500
   let message = 'Something went wrong'
-  let errorMessage: IGenericErrorMessage[] = []
+  let errorMessages: IGenericErrorMessage[] = []
 
-  if (err?.name === 'validationError') {
+  if (err?.name === 'ValidationError') {
     const simplifiedError = handleValidationError(err)
-
     statusCode = simplifiedError.statusCode
     message = simplifiedError.message
-    errorMessage = simplifiedError.errorMessages
+    errorMessages = simplifiedError.errorMessages
   } else if (err instanceof ApiError) {
     statusCode = err?.statusCode
+    message = err.message
+    errorMessages = err?.message
+      ? [
+          {
+            path: '',
+            message: err?.message,
+          },
+        ]
+      : []
+  } else if (err instanceof Error) {
     message = err?.message
-    errorMessage = err?.message
+    errorMessages = err?.message
       ? [
           {
             path: '',
@@ -36,7 +45,7 @@ const globalErrorHandlers = (
   res.status(statusCode).json({
     success: false,
     message,
-    errorMessage,
+    errorMessages,
     stack: config.env !== 'production' ? err?.stack : undefined,
   })
   next()

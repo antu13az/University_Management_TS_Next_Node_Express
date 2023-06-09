@@ -1,6 +1,6 @@
+import DailyRotateFile from 'winston-daily-rotate-file'
 import path from 'path'
 import { createLogger, format, transports } from 'winston'
-import DailyRotateFile from 'winston-daily-rotate-file'
 
 const { combine, timestamp, label, printf } = format
 
@@ -10,8 +10,15 @@ const myFormat = printf(({ level, message, label, timestamp }) => {
   const minutes = date.getMinutes()
   const seconds = date.getSeconds()
 
-  return `${date.toDateString()} ${hour}:${minutes}:${seconds} } [${label}] ${level}: ${message}`
+  return `${date.toDateString()} ${hour}:${minutes}:${seconds}[${label}] ${level}: ${message}`
 })
+const now = new Date()
+const hours = now.getHours()
+const minutes = String(now.getMinutes()).padStart(2, '0')
+const seconds = String(now.getSeconds()).padStart(2, '0')
+const period = hours >= 12 ? 'PM' : 'AM'
+const formattedHours = hours % 12 || 12
+
 const successLogger = createLogger({
   level: 'info',
   format: combine(label({ label: 'PH' }), timestamp(), myFormat),
@@ -23,7 +30,7 @@ const successLogger = createLogger({
         'logs',
         'winston',
         'successes',
-        'uv-mn-%DATE%-success.log'
+        `UV-MN-${formattedHours}-${minutes}-${seconds}-${period}-success.log`
       ),
       datePattern: 'YYYY-DD-MM-HH',
       zippedArchive: true,
@@ -44,7 +51,7 @@ const errorLogger = createLogger({
         'logs',
         'winston',
         'errors',
-        'un-mn-%DATE%-error.log'
+        `UV-MN-${formattedHours}-${minutes}-${seconds}-${period}-errors.log`
       ),
       datePattern: 'YYYY-DD-MM-HH',
       zippedArchive: true,

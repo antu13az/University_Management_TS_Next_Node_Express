@@ -1,42 +1,49 @@
+/* eslint-disable no-unused-expressions */
+/* eslint-disable no-console */
 import { ErrorRequestHandler, NextFunction, Request, Response } from 'express'
 import config from '../../config'
 import ApiError from '../../errorsHandler/ApiErrors'
 import handleValidationError from '../../errorsHandler/handleValidetionError'
 import { IGenericErrorMessage } from '../../interfaces/errorsType'
+import { errorLogger } from '../../logger/logger'
 
 const globalErrorHandlers: ErrorRequestHandler = (
-  err,
+  error,
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
+  config.env === 'development'
+    ? console.log(`🐱‍🏍 globalErrorHandler ~~`, error)
+    : errorLogger.error(`🐱‍🏍 globalErrorHandler ~~`, error)
+
   let statusCode = 500
-  let message = 'Something went wrong'
+  let message = 'Something went wrong !'
   let errorMessages: IGenericErrorMessage[] = []
 
-  if (err?.name === 'ValidationError') {
-    const simplifiedError = handleValidationError(err)
+  if (error?.name === 'ValidationError') {
+    const simplifiedError = handleValidationError(error)
     statusCode = simplifiedError.statusCode
     message = simplifiedError.message
     errorMessages = simplifiedError.errorMessages
-  } else if (err instanceof ApiError) {
-    statusCode = err?.statusCode
-    message = err.message
-    errorMessages = err?.message
+  } else if (error instanceof ApiError) {
+    statusCode = error?.statusCode
+    message = error.message
+    errorMessages = error?.message
       ? [
           {
             path: '',
-            message: err?.message,
+            message: error?.message,
           },
         ]
       : []
-  } else if (err instanceof Error) {
-    message = err?.message
-    errorMessages = err?.message
+  } else if (error instanceof Error) {
+    message = error?.message
+    errorMessages = error?.message
       ? [
           {
             path: '',
-            message: err?.message,
+            message: error?.message,
           },
         ]
       : []
@@ -46,8 +53,9 @@ const globalErrorHandlers: ErrorRequestHandler = (
     success: false,
     message,
     errorMessages,
-    stack: config.env !== 'production' ? err?.stack : undefined,
+    stack: config.env !== 'production' ? error?.stack : undefined,
   })
+
   next()
 }
 

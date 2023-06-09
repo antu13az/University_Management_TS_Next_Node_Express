@@ -1,7 +1,7 @@
 import cors from 'cors'
 import express, { Application, Request, Response } from 'express'
 
-import dbConnect from './utils/databaseConnection'
+import globalErrorHandlers from './app/middlewares/globalErrorHandlers'
 import { UserRoutes } from './app/modules/users/user.route'
 const app: Application = express()
 
@@ -12,17 +12,30 @@ app.use(express.urlencoded({ extended: false }))
 
 // Database Connection
 
-dbConnect()
-
 // Application all controllers routs
 
 app.use('/api/v1/users/', UserRoutes)
 
-// extEnds error handling
-
-// Root Api
+//Testing
 app.get('/', (req: Request, res: Response) => {
-  res.send('Hello World!')
+  res.send('Hello Server !!!!!!!')
 })
 
+//global error handler
+app.use(globalErrorHandlers)
+
+//handle not found
+// app.use((req: Request, res: Response, next: NextFunction) => {
+//   res.status(httpStatus.NOT_FOUND).json({
+//     success: false,
+//     message: 'Not Found',
+//     errorMessages: [
+//       {
+//         path: req.originalUrl,
+//         message: 'API Not Found',
+//       },
+//     ],
+//   });
+//   next();
+// });
 export default app

@@ -1,8 +1,8 @@
-import { User } from './user.model';
+import { CreateUserModel } from './user.model';
 
 // let initialUserId = 0;
 export const findLastUserId = async () => {
-  const lastUser = await User.findOne({}, { id: 1, _id: 0 })
+  const lastUser = await CreateUserModel.findOne({}, { id: 1, _id: 0 })
     .sort({ createdAt: -1 })
     .lean();
 

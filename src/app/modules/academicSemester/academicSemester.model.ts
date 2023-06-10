@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 import { academicSemesterMonths } from './academicSemester.constants';
 import {
-  AcademicSemesterModel,
+  AcademicSemesterInterfaceModel,
   IAcademicSemester,
 } from './academicSemester.interface';
 //   title: string
@@ -44,5 +44,5 @@ const academicSemesterSchema = new Schema<IAcademicSemester>(
 
 export const academicSemesterModel = model<
   IAcademicSemester,
-  AcademicSemesterModel
+  AcademicSemesterInterfaceModel
 >('AcademicSemester', academicSemesterSchema);

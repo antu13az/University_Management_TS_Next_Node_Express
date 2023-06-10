@@ -15,6 +15,7 @@ export type IAcademicSemesterMonths =
   | 'December';
 export type IAcademicSemesterTitle = 'Autumn' | 'Summer' | 'Fall';
 export type IAcademicSemesterCode = '01' | '02' | '03';
+
 export type IAcademicSemester = {
   title: IAcademicSemesterTitle;
   year: number;
@@ -23,4 +24,4 @@ export type IAcademicSemester = {
   endMonth: IAcademicSemesterMonths;
 };
 
-export type AcademicSemesterModel = Model<IAcademicSemester>;
+export type AcademicSemesterInterfaceModel = Model<IAcademicSemester>;

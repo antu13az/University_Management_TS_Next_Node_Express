@@ -1,23 +1,23 @@
-import DailyRotateFile from 'winston-daily-rotate-file'
-import path from 'path'
-import { createLogger, format, transports } from 'winston'
+import DailyRotateFile from 'winston-daily-rotate-file';
+import path from 'path';
+import { createLogger, format, transports } from 'winston';
 
-const { combine, timestamp, label, printf } = format
+const { combine, timestamp, label, printf } = format;
 
 const myFormat = printf(({ level, message, label, timestamp }) => {
-  const date = new Date(timestamp)
-  const hour = date.getHours()
-  const minutes = date.getMinutes()
-  const seconds = date.getSeconds()
+  const date = new Date(timestamp);
+  const hour = date.getHours();
+  const minutes = date.getMinutes();
+  const seconds = date.getSeconds();
 
-  return `${date.toDateString()} ${hour}:${minutes}:${seconds}[${label}] ${level}: ${message}`
-})
-const now = new Date()
-const hours = now.getHours()
-const minutes = String(now.getMinutes()).padStart(2, '0')
-const seconds = String(now.getSeconds()).padStart(2, '0')
-const period = hours >= 12 ? 'PM' : 'AM'
-const formattedHours = hours % 12 || 12
+  return `${date.toDateString()} ${hour}:${minutes}:${seconds}[${label}] ${level}: ${message}`;
+});
+const now = new Date();
+const hours = now.getHours();
+const minutes = String(now.getMinutes()).padStart(2, '0');
+const seconds = String(now.getSeconds()).padStart(2, '0');
+const period = hours >= 12 ? 'PM' : 'AM';
+const formattedHours = hours % 12 || 12;
 
 const successLogger = createLogger({
   level: 'info',
@@ -38,7 +38,7 @@ const successLogger = createLogger({
       maxFiles: '14d',
     }),
   ],
-})
+});
 
 const errorLogger = createLogger({
   level: 'error',
@@ -59,6 +59,6 @@ const errorLogger = createLogger({
       maxFiles: '14d',
     }),
   ],
-})
+});
 
-export { successLogger, errorLogger }
+export { successLogger, errorLogger };

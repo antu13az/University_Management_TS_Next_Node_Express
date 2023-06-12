@@ -5,7 +5,7 @@ export type IPaginationOptions = {
   sortOrder?: 'asc' | 'desc';
 };
 
-export type IGenericResponsePaginetion<T> = {
+export type IGenericResponsePagination<T> = {
   meta: {
     page: number;
     limit: number;

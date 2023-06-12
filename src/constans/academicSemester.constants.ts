@@ -33,3 +33,10 @@ export const academicSemesterTitleAndCodeMatcher: {
   Summer: '02',
   Fall: '03',
 };
+export const academicSemesterSearchAbleFields = ['title', 'code', 'year'];
+export const academicSemesterFilterAbleFields = [
+  'searchTerm',
+  'title',
+  'code',
+  'year',
+];

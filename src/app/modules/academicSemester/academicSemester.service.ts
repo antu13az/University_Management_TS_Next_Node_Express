@@ -1,11 +1,19 @@
 import httpStatus from 'http-status';
-import { academicSemesterTitleAndCodeMatcher } from '../../../constans/academicSemester.constants';
-import ApiError from '../../../errorsHandler/ApiErrors';
+import { SortOrder } from 'mongoose';
 import {
-  IGenericResponsePaginetion,
+  academicSemesterSearchAbleFields,
+  academicSemesterTitleAndCodeMatcher,
+} from '../../../constans/academicSemester.constants';
+import ApiError from '../../../errorsHandler/ApiErrors';
+import { paginationHelpers } from '../../../helpers/pegenationHelper';
+import {
+  IGenericResponsePagination,
   IPaginationOptions,
 } from '../../../interfaces/paginationType';
-import { IAcademicSemester } from './academicSemester.interface';
+import {
+  IAcademicSemester,
+  IAcademicSemesterFilters,
+} from './academicSemester.interface';
 import { academicSemesterModel } from './academicSemester.model';
 const createAcademicSemester = async (
   payload: IAcademicSemester
@@ -18,13 +26,39 @@ const createAcademicSemester = async (
 };
 
 const getAllSemestersService = async (
+  filters: IAcademicSemesterFilters,
   paginationOptions: IPaginationOptions
-): Promise<IGenericResponsePaginetion<IAcademicSemester[]>> => {
-  const { page = 1, limit = 10 } = paginationOptions;
-  const skip = (page - 1) * limit;
+): Promise<IGenericResponsePagination<IAcademicSemester[]>> => {
+  const { searchTerm, ...filterData } = filters;
+  console.log(searchTerm);
+
+  const andConditions = [];
+  if (searchTerm) {
+    andConditions.push({
+      $or: academicSemesterSearchAbleFields.map(field => ({
+        [field]: { $regex: searchTerm, $options: 'i' },
+      })),
+    });
+  }
+  if (Object.keys(filterData).length) {
+    andConditions.push({
+      $and: Object.entries(filterData).map(([field, value]) => ({
+        [field]: value,
+      })),
+    });
+  }
+  const sortCondition: { [key: string]: SortOrder } = {};
+  const { page, limit, skip, sortBy, sortOrder } =
+    paginationHelpers.calculatePagination(paginationOptions);
+  if (sortBy && sortOrder) {
+    sortCondition[sortBy] = sortOrder;
+  }
+
+  const whereConditions =
+    andConditions.length > 0 ? { $and: andConditions } : {};
   const result = await academicSemesterModel
-    .find()
-    .sort()
+    .find(whereConditions)
+    .sort(sortCondition)
     .skip(skip)
     .limit(limit);
   const total = await academicSemesterModel.countDocuments();

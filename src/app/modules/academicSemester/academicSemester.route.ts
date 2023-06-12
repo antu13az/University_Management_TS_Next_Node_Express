@@ -1,6 +1,6 @@
 import { Router } from 'express';
+import { AcademicSemesterValidation } from '../../../ZodValidation/academicSemester.validation';
 import zodValidationRequest from '../../middlewares/zodValidateRequest';
-import { AcademicSemesterValidation } from './academicSemester.validation';
 import { academicSemesterController } from './academicSemester.controller';
 
 const router = Router();
@@ -12,5 +12,6 @@ router.post(
   ),
   academicSemesterController.createAcademicSemesterController
 );
+router.get('/', academicSemesterController.getAllSemestersController);
 
 export const AcademicSemesterRoute = router;

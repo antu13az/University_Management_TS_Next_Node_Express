@@ -1,7 +1,7 @@
 import status from 'http-status';
 import { Schema, model } from 'mongoose';
+import { academicSemesterMonths } from '../../../constans/academicSemester.constants';
 import ApiError from '../../../errorsHandler/ApiErrors';
-import { academicSemesterMonths } from './academicSemester.constants';
 import {
   AcademicSemesterInterfaceModel,
   IAcademicSemester,

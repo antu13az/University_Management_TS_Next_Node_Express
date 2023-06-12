@@ -1,8 +1,11 @@
-import httpStatus from 'http-status';
 import { NextFunction, Request, Response } from 'express';
-import catchAsync from '../../shared/catchAsync';
+import httpStatus from 'http-status';
+import { paginationFields } from '../../../constans/pegination.constans';
+import catchAsync from '../../../shared/catchAsync';
+import pick from '../../../shared/pick';
+import sendResponse from '../../../shared/sendResponse';
+import { IAcademicSemester } from './academicSemester.interface';
 import { AcademicSemesterService } from './academicSemester.service';
-import sendResponse from '../../shared/sendResponse';
 
 const createAcademicSemesterController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -11,7 +14,7 @@ const createAcademicSemesterController = catchAsync(
       academicSemesterData
     );
 
-    sendResponse(res, {
+    sendResponse<IAcademicSemester>(res, {
       statusCode: httpStatus.OK,
       success: true,
       message: 'Academic Semester Create Successfully',
@@ -21,6 +24,27 @@ const createAcademicSemesterController = catchAsync(
   }
 );
 
+const getAllSemestersController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const paginationOptions = pick(req.query, paginationFields);
+
+    const result = await AcademicSemesterService.getAllSemestersService(
+      paginationOptions
+    );
+
+    sendResponse<IAcademicSemester[]>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Data retrieved successfully',
+      meta: result.meta,
+      data: result.data,
+    });
+
+    next();
+  }
+);
+
 export const academicSemesterController = {
   createAcademicSemesterController,
+  getAllSemestersController,
 };
